@@ -1,0 +1,11 @@
+# SSL
+*.crt
+*.pem
+*.csr
+*.key
+*.srl
+certs/*
+!certs/generate_sample_certs.sh
+!certs/*.cnf
+
+.env

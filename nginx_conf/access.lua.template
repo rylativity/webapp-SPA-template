@@ -1,0 +1,24 @@
+local opts = {
+    redirect_uri_path = "/redirect_uri",
+    accept_none_alg = true,
+    discovery = "${DOCKER_HOST_URL}:8080/auth/realms/${KEYCLOAK_REALM_NAME}/.well-known/openid-configuration",
+    client_id = "openresty",
+    client_secret = "a6b0f35a-6624-42f0-9deb-f08b5f0fab5e",
+    redirect_uri_scheme = "https",
+    logout_path = "/logout",
+    redirect_after_logout_uri = "${DOCKER_HOST_URL}:8080/auth/realms/${KEYCLOAK_REALM_NAME}/protocol/openid-connect/logout?redirect_uri=${FRONTEND_URL}}",
+    redirect_after_logout_with_id_token_hint = false,
+    scope = "openid"
+  }
+  -- call introspect for OAuth 2.0 Bearer Access Token validation
+  local res, err, _, session = require("resty.openidc").authenticate(opts)
+  if err then
+    ngx.status = 403
+    ngx.say(err)
+    ngx.exit(ngx.HTTP_FORBIDDEN)
+  end
+  ngx.req.set_header("Authorization", "Bearer " .. tostring(res.access_token))
+  local cjson = require "cjson"
+  ngx.req.set_header("Id-Token", session.data.enc_id_token)
+  ngx.header["Set-Cookie"] = "access_token=" .. res.access_token .. "; secure"
+  --ngx.req.set_header("id_token", cjson.encode(res.id_token))

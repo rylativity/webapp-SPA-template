@@ -1,0 +1,69 @@
+server {
+	listen 80 default_server;
+	listen [::]:80 default_server;
+	server_name ${FRONTEND_HOSTNAME} *.${FRONTEND_HOSTNAME};
+	return 301 https://$host$request_uri;
+}
+
+server {
+    # listen       80;
+    listen              443 ssl;
+    ssl_certificate     /run/secrets/ssl_cert;
+    ssl_certificate_key /run/secrets/ssl_key;
+    ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;
+    ssl_ciphers         HIGH:!aNULL:!MD5;
+    server_name  ${FRONTEND_HOSTNAME} *.${FRONTEND_HOSTNAME};
+
+    proxy_cache_bypass  $http_upgrade;
+    proxy_set_header Upgrade           $http_upgrade;
+    proxy_set_header Connection        "upgrade";
+    proxy_set_header Host              $host;
+    proxy_set_header X-Real-IP         $remote_addr;
+    proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+    proxy_set_header X-Forwarded-Proto $scheme;
+    proxy_set_header X-Forwarded-Host  $host;
+    proxy_set_header X-Forwarded-Port  $server_port;
+
+    #access_log  /var/log/nginx/host.access.log  main;
+
+    location / {
+        root   /usr/share/nginx/html;
+        index  index.html index.htm;
+    }
+
+    #error_page  404              /404.html;
+
+    # redirect server error pages to the static page /50x.html
+    #
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+        root   /usr/share/nginx/html;
+    }
+
+    access_by_lua_file /etc/nginx/access.lua;
+
+    #Simple proxy pass
+    location /hello {
+      resolver 127.0.0.11 ipv6=off valid=10s;
+      set $flask_backend flaskapp;
+      proxy_pass      http://$flask_backend:5000$request_uri;
+    }
+    location /auth {
+      access_by_lua return;
+      proxy_pass      http://keycloak:8080/auth;
+    }
+    location /home {
+      resolver 127.0.0.11 ipv6=off valid=10s;
+      set $vue vue-nginx;
+      proxy_pass      http://$vue:80$request_uri;
+      #proxy_redirect http://$vue:80 /home/;
+    }
+    
+ 
+      # I disabled caching so the browser won't cache the site.
+      expires           0;
+      add_header        Cache-Control private;
+
+
+}
+

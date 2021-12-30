@@ -1,0 +1,81 @@
+version: '3.9'
+
+services: 
+  openresty:
+    # image: my_repo/nginx
+    build: 
+      context: .
+      dockerfile: ./openresty.Dockerfile
+      args:
+        - FRONTEND_HOSTNAME=${FRONTEND_HOSTNAME}
+        - FRONTEND_URL=${FRONTEND_URL}
+        - DOCKER_HOST_URL=${DOCKER_HOST_URL}
+        - KEYCLOAK_REALM_NAME=${KEYCLOAK_REALM_NAME}
+    env_file:
+      - .env
+    ports: 
+      - 80:80
+      - 443:443
+    # healthcheck:
+    #   test: ['CMD', 'curl', '-f', 'http://localhost:80']
+    secrets:
+       - ssl_cert
+       - ssl_key
+    restart: always
+  postgres:
+    image: postgres:13
+    volumes:
+      - keycloak_postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: password
+    restart: always
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    command: ["-Dkeycloak.frontendUrl=${KEYCLOAK_FRONTEND_URL}"]
+    environment:
+      DB_VENDOR: POSTGRES
+      DB_ADDR: postgres
+      DB_DATABASE: keycloak
+      DB_USER: keycloak
+      DB_SCHEMA: public
+      DB_PASSWORD: password
+      KEYCLOAK_USER: admin
+      KEYCLOAK_PASSWORD: Pa55w0rd
+#      KEYCLOAK_LOGLEVEL: DEBUG
+      # Uncomment the line below if you want to specify JDBC parameters. The parameter below is just an example, and it shouldn't be used in production without knowledge. It is highly recommended that you read the PostgreSQL JDBC driver documentation in order to use it.
+      #JDBC_PARAMS: "ssl=true"
+    ports:
+      - ${KEYCLOAK_HTTP_PORT}:8080
+      - ${KEYCLOAK_HTTPS_PORT}:8443
+    restart: always
+    depends_on:
+      - postgres
+    # volumes:
+    #   - ./keycloak_conf/standalone.xml:/opt/jboss/keycloak/standalone/configuration/standalone.xml
+  vue-nginx:
+    build:
+      context: ./vue_app/
+      dockerfile: vue.Dockerfile
+    ports:
+      - "3000:80"
+    restart: "always"
+  flaskapp:
+    # image: my_repo/my_flask_app
+    build: 
+      context: .
+      dockerfile: ./flaskapp.Dockerfile
+    ports: 
+      - 5000:5000
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:5000/hello']
+      start_period: 7s
+    restart: always
+volumes:
+  keycloak_postgres_data:
+secrets:
+  ssl_cert:
+    file: ${SSL_CERTIFICATE_FILE}
+  ssl_key:
+    file: ${SSL_KEY_FILE}
