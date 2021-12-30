@@ -12,7 +12,7 @@ Steps To Start Project with Docker-Compose
 7. `docker-compose up -d` to start the project
 8. Create a realm called "myrealm" in Keycloak through the admin console at https://localhost/auth (you have to wait for Keycloak to start; login information can be found in the docker-compose.yml).  If you changed the realm name in the .env file, use that as the realm name instead
 9. Create client called "openresty" in "myrealm" realm
-10. Set client to "confidential" and copy the client id and secret under "credentials" tab in Keycloak to nginx_conf/default.conf in access.lua.template script.
+10. Set client to "confidential" and copy the client id and secret under "credentials" tab in Keycloak to openresty_conf/access.lua.template script.
 11. Create a new user in the realm and assign them a password.
 11. Return to your terminal and run `docker-compose build && docker-compose up -d` to rebuild and restart the openresty container with your keycloak realm information configured.
 12. Navigate to https://localhost/hello to access your flask app protected by keycloak.
