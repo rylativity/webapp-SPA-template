@@ -16,5 +16,6 @@ Steps To Start Project with Docker-Compose
 11. Create a new user in the realm and assign them a password.
 11. Return to your terminal and run `docker-compose build && docker-compose up -d` to rebuild and restart the openresty container with your keycloak realm information configured.
 12. Navigate to https://localhost/hello to access your flask app protected by keycloak.
+13. Navigate to https://localhost/home to see the Vue app, protected by Keycloak, which can also connect to the Flask API.
 
 Note that the access.lua.template script is configured to add the OpenID Connect access_token to the "Authorization" header and id_token to the "Id-Token" header.  These tokens can be parsed (base64 decoded) and used by the flask app or any other upstream applications.
