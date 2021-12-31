@@ -8,4 +8,8 @@ certs/*
 !certs/generate_sample_certs.sh
 !certs/*.cnf
 
+node_modules
+dist
+
 .env
+venv

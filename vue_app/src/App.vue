@@ -40,25 +40,7 @@
         nav
         dense
       >
-        <v-list-item-group
-          v-model="group"
-          active-class="deep-purple--text text--accent-4"
-        >
-
-          <v-list-item @click="setSource('flaskapi')">
-            <v-list-item-icon>
-              <v-icon>mdi-view-dashboard</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Flask Api</v-list-item-title>
-          </v-list-item>
-
-           <v-list-item @click="setSource('keycloak')">
-            <v-list-item-icon>
-              <v-icon>mdi-view-dashboard</v-icon>
-            </v-list-item-icon>
-            <v-list-item-title>Keycloak</v-list-item-title>
-          </v-list-item>
-
+        <v-list-item-group>
           <a target="_blank" href="https://google.com">
           <v-list-item>
             <v-list-item-icon>
@@ -73,12 +55,13 @@
     </v-navigation-drawer>
     <v-main>
       <!-- <router-view/> -->
-      <!-- <v-container>
-        <v-card v-for="(url, name) in sources" :key="name">
-          <portal :src="url"></portal>
+      <v-container>
+        <v-card v-for="(headerVal, headerName) in headers" :key="headerName">
+          <v-card-title>{{ headerName }}</v-card-title>
+          <v-card-text>{{ headerVal }}</v-card-text>
         </v-card>
-      </v-container> -->
-      <iframe :src="sourceUrl" height="100%" width="100%"></iframe>
+      </v-container>
+      <!-- <iframe :src="sourceUrl" height="100%" width="100%"></iframe> -->
 
     </v-main>
   </v-app>
@@ -91,23 +74,18 @@ export default {
 
   data: () => ({
     drawer: false,
-    group: null,
-    source: 'flaskapi',
     sources: {
-      flaskapi: 'https://localhost/hello',
-    }
+      flaskapi: 'https://localhost/api/hello',
+    },
+    headers: {}
   }),
-  computed: {
-    sourceUrl () {
-      return this.sources[this.source]
-    }
-  },
   methods: {
-    setSource (s) {
-      this.source = null
-      this.source = s
-      this.drawer = false
-    }
+  },
+  created() {
+    let endpoint = `/api/headers`;
+    this.$http.get(endpoint).then((response) => {
+      this.headers = response.data
+    })
   }
 }
 </script>

@@ -43,7 +43,7 @@ server {
     access_by_lua_file /etc/nginx/access.lua;
 
     #Simple proxy pass
-    location /hello {
+    location /api {
       resolver 127.0.0.11 ipv6=off valid=10s;
       set $flask_backend flaskapp;
       proxy_pass      http://$flask_backend:5000$request_uri;

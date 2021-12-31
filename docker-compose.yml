@@ -69,7 +69,7 @@ services:
     ports: 
       - 5000:5000
     healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://localhost:5000/hello']
+      test: ['CMD', 'curl', '-f', 'http://localhost:5000/api/hello']
       start_period: 7s
     restart: always
 volumes:

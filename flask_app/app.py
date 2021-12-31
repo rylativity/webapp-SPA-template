@@ -1,10 +1,9 @@
 from flask import Flask, request, Response
-import json
 import socket
 
 app = Flask(__name__)
 
-@app.route('/hello')
+@app.route('/api/hello')
 def hello_world():
     headers = str(request.headers)
     hostname = socket.gethostname()
@@ -12,3 +11,8 @@ def hello_world():
     This App is Running on Host: {hostname}
     #<p>{headers}</p>'''
     return Response(resp, status=200)
+
+@app.route('/api/headers')
+def return_headers():
+    headers = dict(request.headers)
+    return headers
