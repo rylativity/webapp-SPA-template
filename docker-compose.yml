@@ -4,12 +4,11 @@ services:
   openresty:
     # image: my_repo/nginx
     build: 
-      context: .
-      dockerfile: ./openresty.Dockerfile
+      context: ./openresty_conf
+      dockerfile: openresty.Dockerfile
       args:
         - FRONTEND_HOSTNAME=${FRONTEND_HOSTNAME}
         - FRONTEND_URL=${FRONTEND_URL}
-        - DOCKER_HOST_URL=${DOCKER_HOST_URL}
         - KEYCLOAK_REALM_NAME=${KEYCLOAK_REALM_NAME}
     env_file:
       - .env
@@ -64,8 +63,8 @@ services:
   flaskapp:
     # image: my_repo/my_flask_app
     build: 
-      context: .
-      dockerfile: ./flaskapp.Dockerfile
+      context: ./flask_app
+      dockerfile: flaskapp.Dockerfile
     ports: 
       - 5000:5000
     healthcheck:
