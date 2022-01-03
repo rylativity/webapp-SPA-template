@@ -2,7 +2,6 @@ version: '3.9'
 
 services: 
   openresty:
-    # image: my_repo/nginx
     build: 
       context: ./openresty_conf
       dockerfile: openresty.Dockerfile
@@ -15,8 +14,8 @@ services:
     ports: 
       - 80:80
       - 443:443
-    # healthcheck:
-    #   test: ['CMD', 'curl', '-f', 'http://localhost:80']
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://openresty:80']
     secrets:
        - ssl_cert
        - ssl_key
@@ -45,9 +44,12 @@ services:
 #      KEYCLOAK_LOGLEVEL: DEBUG
       # Uncomment the line below if you want to specify JDBC parameters. The parameter below is just an example, and it shouldn't be used in production without knowledge. It is highly recommended that you read the PostgreSQL JDBC driver documentation in order to use it.
       #JDBC_PARAMS: "ssl=true"
-    ports:
-      - ${KEYCLOAK_HTTP_PORT}:8080
-      - ${KEYCLOAK_HTTPS_PORT}:8443
+    # ports:
+    #   - ${KEYCLOAK_HTTP_PORT}:8080
+    #   - ${KEYCLOAK_HTTPS_PORT}:8443
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://keycloak:8080/auth"]
+      retries: 3
     restart: always
     depends_on:
       - postgres
@@ -57,16 +59,15 @@ services:
     build:
       context: ./vue_app/
       dockerfile: vue.Dockerfile
-    ports:
-      - "3000:80"
+    # ports:
+    #   - "3000:80"
     restart: "always"
   flaskapp:
-    # image: my_repo/my_flask_app
     build: 
       context: ./flask_app
       dockerfile: flaskapp.Dockerfile
-    ports: 
-      - 5000:5000
+    # ports: 
+    #   - 5000:5000
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:5000/api/hello']
       start_period: 7s
