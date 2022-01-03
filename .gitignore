@@ -8,6 +8,7 @@ certs/*
 !certs/generate_sample_certs.sh
 !certs/*.cnf
 
+package*.json
 node_modules
 dist
 
