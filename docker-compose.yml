@@ -74,6 +74,13 @@ services:
       test: ['CMD', 'curl', '-f', 'http://localhost:5000/api/hello']
       start_period: 7s
     restart: always
+  portainer:
+    image: cr.portainer.io/portainer/portainer-ce:2.9.3
+    restart: always
+    ports:
+      - 9443:9443
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
 volumes:
   keycloak_postgres_data:
 secrets:

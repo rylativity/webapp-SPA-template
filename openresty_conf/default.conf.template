@@ -59,6 +59,16 @@ server {
       proxy_pass      http://$vue:80$request_uri;
       #proxy_redirect http://$vue:80 /home/;
     }
+    location /portainer/ {
+      access_by_lua return;
+      rewrite ^/portainer/(.*) /$1 break;
+      proxy_pass https://portainer:9443;
+    }
+    location /portainer/api/websocket/ {
+      access_by_lua return;
+      rewrite ^/portainer/api/websocket/(.*) /$1 break;
+      proxy_pass $https://portainer:9443;
+    }
     
  
       # I disabled caching so the browser won't cache the site.
