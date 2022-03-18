@@ -40,8 +40,20 @@ server {
         root   /usr/share/nginx/html;
     }
 
+    resolver 127.0.0.11;
     access_by_lua_file /etc/nginx/access.lua;
     set $session_name nginx_session;
+
+    location = / {
+      return 301 https://$host/home;
+    }
+
+    location /home {
+      resolver 127.0.0.11 ipv6=off valid=10s;
+      set $vue vue-nginx;
+      proxy_pass      http://$vue:80$request_uri;
+      #proxy_redirect http://$vue:80 /home/;
+    }
 
     #Simple proxy pass
     location /api {
@@ -53,18 +65,12 @@ server {
       access_by_lua return;
       proxy_pass      http://keycloak:8080/auth;
     }
-    location /home {
-      resolver 127.0.0.11 ipv6=off valid=10s;
-      set $vue vue-nginx;
-      proxy_pass      http://$vue:80$request_uri;
-      #proxy_redirect http://$vue:80 /home/;
-    }
-    location /portainer/ {
-      resolver 127.0.0.11 ipv6=off valid=10s;
-      access_by_lua return;
-      rewrite ^/portainer/(.*) /$1 break;
-      proxy_pass https://portainer:9443;
-    }
+    # location /portainer/ {
+    #   resolver 127.0.0.11 ipv6=off valid=10s;
+    #   access_by_lua return;
+    #   rewrite ^/portainer/(.*) /$1 break;
+    #   proxy_pass https://portainer:9443;
+    # }
     
     expires           0;
     add_header        Cache-Control private;

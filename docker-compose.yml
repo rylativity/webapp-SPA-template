@@ -15,7 +15,7 @@ services:
       - 80:80
       - 443:443
     healthcheck:
-      test: ['CMD', 'curl', '-f', 'http://openresty:80']
+      test: ['CMD', 'curl', '-f', 'http://localhost:80']
     secrets:
        - ssl_cert
        - ssl_key
@@ -29,7 +29,7 @@ services:
       POSTGRES_USER: keycloak
       POSTGRES_PASSWORD: password
     healthcheck:
-      test: ["CMD", "pg_isready"]
+      test: ["CMD", "pg_isready", "-U", "keycloak"]
     restart: always
   keycloak:
     image: quay.io/keycloak/keycloak:latest
@@ -49,9 +49,6 @@ services:
     # ports:
     #   - ${KEYCLOAK_HTTP_PORT}:8080
     #   - ${KEYCLOAK_HTTPS_PORT}:8443
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://keycloak:8080/auth"]
-      retries: 3
     restart: always
     depends_on:
       - postgres
@@ -74,13 +71,13 @@ services:
       test: ['CMD', 'curl', '-f', 'http://localhost:5000/api/hello']
       start_period: 7s
     restart: always
-  portainer:
-    image: cr.portainer.io/portainer/portainer-ce:2.9.3
-    restart: always
-    ports:
-      - 9443:9443
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+  # portainer:
+  #   image: cr.portainer.io/portainer/portainer-ce:2.9.3
+  #   restart: always
+  #   ports:
+  #     - 9443:9443
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
 volumes:
   keycloak_postgres_data:
 secrets:
