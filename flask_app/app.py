@@ -35,6 +35,7 @@ def test_token():
     data = jwt.decode(
         token,
         signing_key.key,
+        audience="account",
         algorithms=["RS256"],
         options={"verify_exp": False},
     )
