@@ -1,3 +1,4 @@
+from lib2to3.pgen2 import token
 from flask import Flask, request, Response
 import socket
 import jwt
@@ -6,6 +7,23 @@ from jwt import PyJWKClient
 import logging
 log = logging.getLogger(__name__)
 log.setLevel(logging.INFO)
+
+def verify_user(req):
+    headers = dict(req.headers)
+    auth: str = headers.get("Authorization")
+    token = auth.replace("Bearer","").strip()
+   
+    url = "http://keycloak:8080/auth/realms/myrealm/protocol/openid-connect/certs"
+    jwks_client = PyJWKClient(url)
+    signing_key = jwks_client.get_signing_key_from_jwt(token)
+    data = jwt.decode(
+        token,
+        signing_key.key,
+        audience="account",
+        algorithms=["RS256"],
+        options={"verify_exp": False},
+    )
+    return data
 
 app = Flask(__name__)
 
@@ -25,18 +43,5 @@ def return_headers():
 
 @app.route('/api/testtoken')
 def test_token():
-    headers = dict(request.headers)
-    auth: str = headers.get("Authorization")
-    token = auth.replace("Bearer","").strip()
-   
-    url = "http://keycloak:8080/auth/realms/myrealm/protocol/openid-connect/certs"
-    jwks_client = PyJWKClient(url)
-    signing_key = jwks_client.get_signing_key_from_jwt(token)
-    data = jwt.decode(
-        token,
-        signing_key.key,
-        audience="account",
-        algorithms=["RS256"],
-        options={"verify_exp": False},
-    )
-    return data
+    token_data = verify_user(req=request)
+    return token_data
