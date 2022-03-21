@@ -16,14 +16,17 @@ def verify_user(req):
     url = "http://keycloak:8080/auth/realms/myrealm/protocol/openid-connect/certs"
     jwks_client = PyJWKClient(url)
     signing_key = jwks_client.get_signing_key_from_jwt(token)
-    data = jwt.decode(
-        token,
-        signing_key.key,
-        audience="account",
-        algorithms=["RS256"],
-        options={"verify_exp": False},
-    )
-    return data
+    try:
+        data = jwt.decode(
+            token,
+            signing_key.key,
+            audience="account",
+            algorithms=["RS256"],
+            options={"verify_exp": False},
+        )
+        return data
+    except jwt.ExpiredSignatureError:
+        return Response(response = {"status_code":401, "message":"Expired Token"},status=401)
 
 app = Flask(__name__)
 
