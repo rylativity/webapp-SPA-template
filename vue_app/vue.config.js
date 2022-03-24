@@ -18,6 +18,19 @@ module.exports = {
       .port(3000)
       .disableHostCheck(true)
       .headers({ 'Access-Control-Allow-Origin': ['*'] })
+    
+    config.module
+          .rule('mjs$')
+          .test(/\.mjs$/)
+          .include
+            .add(/node_modules/)
+            .end()
+          .type('javascript/auto');
+  },
+  configureWebpack: {
+    resolve: {
+      extensions: ['*', '.mjs', '.js', '.vue', '.json']
+    }
   },
 
   // devServer: {
