@@ -22,13 +22,8 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn
-        href="https://github.com/vuetifyjs/vuetify/releases/latest"
-        target="_blank"
-        text
-      >
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
+      <v-btn @click="keycloak.logout()">
+        <span class="mr-2">Logout</span>
       </v-btn>
     </v-app-bar>
     <v-navigation-drawer
@@ -56,6 +51,27 @@
     <v-main>
       <!-- <router-view/> -->
       <v-container>
+        <v-card>
+          <v-btn @click="getProtectedResource()">
+            <span class="mr-2">Make Protected API Call</span>
+          </v-btn>
+          <v-card-title>Protect API Call Result</v-card-title>
+          <v-card-text>{{ protectedApiData }}</v-card-text>
+        </v-card>
+      </v-container>
+      <v-container>
+        <v-card>
+          <v-card-title>Access Token</v-card-title>
+          <v-card-text>{{ keycloak.token }}</v-card-text>
+        </v-card>
+        <v-card>
+          <v-card-title>Id Token</v-card-title>
+          <v-card-text>{{ keycloak.idToken }}</v-card-text>
+        </v-card>
+      </v-container>
+      <br>
+      <v-container>
+        <h2>Proxy Headers</h2>
         <v-card v-for="(headerVal, headerName) in headers" :key="headerName">
           <v-card-title>{{ headerName }}</v-card-title>
           <v-card-text>{{ headerVal }}</v-card-text>
@@ -71,15 +87,26 @@
 
 export default {
   name: 'App',
-
+  props:['keycloak'],
   data: () => ({
     drawer: false,
     sources: {
       flaskapi: 'https://localhost/api/hello',
     },
-    headers: {}
+    headers: {},
+    protectedApiData:{"Result":"Not Clicked"}
   }),
   methods: {
+    getProtectedResource() {
+      let endpoint = `/api/protected`;
+      this.$http.get(endpoint, {headers:{
+        Authorization: `Bearer ${this.keycloak.token}`
+      }}).then((response) => {
+        this.protectedApiData = response.data
+      }).catch(() => {
+        this.protectedApiData = {"Result":"Failed to Fetch Protected Resource"}
+      })
+    }
   },
   created() {
     let endpoint = `/api/headers`;

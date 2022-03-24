@@ -4,6 +4,8 @@ import socket
 import jwt
 from jwt import PyJWKClient
 
+from datetime import datetime
+
 import logging
 log = logging.getLogger(__name__)
 log.setLevel(logging.INFO)
@@ -21,8 +23,7 @@ def verify_user(req):
             token,
             signing_key.key,
             audience="account",
-            algorithms=["RS256"],
-            options={"verify_exp": False},
+            algorithms=["RS256"]
         )
         return data
     except jwt.ExpiredSignatureError:
@@ -44,7 +45,8 @@ def return_headers():
     headers = dict(request.headers)
     return headers
 
-@app.route('/api/testtoken')
+@app.route('/api/protected')
 def test_token():
     token_data = verify_user(req=request)
-    return token_data
+    response = {"Result":"Success", "response_timestamp": datetime.now().isoformat(), "request_token":token_data}
+    return response

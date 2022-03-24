@@ -43,7 +43,7 @@ server {
     }
 
     resolver 127.0.0.11;
-    access_by_lua_file /etc/nginx/access.lua;
+    #access_by_lua_file /etc/nginx/access.lua;
     #set $session_name nginx_session;
 
     location = / {

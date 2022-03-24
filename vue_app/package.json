@@ -10,8 +10,10 @@
   "dependencies": {
     "axios": "^0.24.0",
     "core-js": "^3.6.5",
+    "keycloak-js": "^17.0.1",
     "vue": "^2.6.11",
     "vue-router": "^3.2.0",
+    "vuejs-logger": "^1.5.5",
     "vuetify": "^2.4.0"
   },
   "devDependencies": {
