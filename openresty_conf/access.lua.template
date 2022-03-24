@@ -6,7 +6,7 @@ local opts = {
     client_secret = "1f24a8e1-6a3d-4003-818c-ce6ad8c91c23",
     redirect_uri_scheme = "https",
     logout_path = "/logout",
-    redirect_after_logout_uri = "http://keycloak:8080/auth/realms/${KEYCLOAK_REALM_NAME}/protocol/openid-connect/logout?redirect_uri=${FRONTEND_URL}}",
+    redirect_after_logout_uri = "http://keycloak:8080/auth/realms/${KEYCLOAK_REALM_NAME}/protocol/openid-connect/logout?redirect_uri=/",
     redirect_after_logout_with_id_token_hint = false,
     scope = "openid",
     --session_contents = {id_token=true, access_token=true}

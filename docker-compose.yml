@@ -5,10 +5,6 @@ services:
     build: 
       context: ./openresty_conf
       dockerfile: openresty.Dockerfile
-      args:
-        - FRONTEND_HOSTNAME=${FRONTEND_HOSTNAME}
-        - FRONTEND_URL=${FRONTEND_URL}
-        - KEYCLOAK_REALM_NAME=${KEYCLOAK_REALM_NAME}
     env_file:
       - .env
     ports: 
