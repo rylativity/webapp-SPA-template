@@ -7,8 +7,7 @@ import VueLogger from 'vuejs-logger';
 import Keycloak from 'keycloak-js';
 
 Vue.config.productionTip = false;
-axios.defaults.headers["Content-type"] = "application/json";
-Vue.prototype.$http = axios;
+
 Vue.use(VueLogger);
 
 let keycloakInitOptions = {
@@ -16,6 +15,13 @@ let keycloakInitOptions = {
 }
 
 let keycloak = Keycloak(keycloakInitOptions);
+
+axios.defaults.headers["Content-type"] = "application/json";
+axios.interceptors.request.use(function (config) {
+  config.headers.Authorization = `Bearer ${keycloak.token}`
+  return config;
+});
+Vue.prototype.$http = axios;
 
 keycloak.init({ onLoad: keycloakInitOptions.onLoad }).then((auth) => {
   if (!auth) {

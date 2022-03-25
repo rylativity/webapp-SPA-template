@@ -99,9 +99,8 @@ export default {
   methods: {
     getProtectedResource() {
       let endpoint = `/api/protected`;
-      this.$http.get(endpoint, {headers:{
-        Authorization: `Bearer ${this.keycloak.token}`
-      }}).then((response) => {
+      //Authorization token will be added by axios interceptor in main.js
+      this.$http.get(endpoint).then((response) => {
         this.protectedApiData = response.data
       }).catch(() => {
         this.protectedApiData = {"Result":"Failed to Fetch Protected Resource"}
