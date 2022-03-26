@@ -1,4 +1,4 @@
-# analytics_portal
+
 
 ## Project setup
 ```
