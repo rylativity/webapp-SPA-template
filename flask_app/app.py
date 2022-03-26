@@ -1,10 +1,10 @@
-from lib2to3.pgen2 import token
 from flask import Flask, request, Response
 import socket
 import jwt
 from jwt import PyJWKClient
 
 from datetime import datetime
+import os
 
 import logging
 log = logging.getLogger(__name__)
@@ -15,7 +15,7 @@ def verify_user(req):
     auth: str = headers.get("Authorization")
     token = auth.replace("Bearer","").strip()
    
-    url = "http://keycloak:8080/auth/realms/myrealm/protocol/openid-connect/certs"
+    url = "http://keycloak:8080/auth/realms/master/protocol/openid-connect/certs"
     jwks_client = PyJWKClient(url)
     signing_key = jwks_client.get_signing_key_from_jwt(token)
     try:

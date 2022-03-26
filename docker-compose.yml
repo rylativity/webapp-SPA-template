@@ -27,7 +27,7 @@ services:
     restart: always
   keycloak:
     image: quay.io/keycloak/keycloak:latest
-    command: ["-Dkeycloak.frontendUrl=${KEYCLOAK_FRONTEND_URL}"]
+    command: ["-Dkeycloak.frontendUrl=https://localhost/auth"]
     environment:
       DB_VENDOR: POSTGRES
       DB_ADDR: postgres

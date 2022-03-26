@@ -11,7 +11,7 @@ Vue.config.productionTip = false;
 Vue.use(VueLogger);
 
 let keycloakInitOptions = {
-  url: 'https://localhost/auth', realm: 'myrealm', clientId: 'vue-app', onLoad: 'login-required'
+  url: 'https://localhost/auth', realm: 'master', clientId: 'vue-app', onLoad: 'login-required'
 }
 
 let keycloak = Keycloak(keycloakInitOptions);
