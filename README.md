@@ -1,6 +1,6 @@
-# OpenResty - Keycloak - Vue - Flask
+# NginX - Keycloak - Vue - Flask
 
-This project is a basic implementation of an Openresty (Nginx) Reverse Proxy in Front of A Vue Single-Page Application (served in its own Nginx Container) and a Flask Backend implementing Bearer Token Authentication.  Keycloak is used as an OpenID Connect Identity Provider.
+This project is a basic implementation of an Nginx Reverse Proxy in Front of A Vue Single-Page Application (served in its own Nginx Container) and a Flask API implementing Bearer Token Authentication.  Keycloak is used as an OpenID Connect Identity Provider.
 
 This project requires Docker and docker-compose installed on either Linux or MacOS.  Windows is not currently supported.
 
