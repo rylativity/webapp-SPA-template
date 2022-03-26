@@ -37,18 +37,13 @@ services:
       DB_PASSWORD: password
       KEYCLOAK_USER: admin
       KEYCLOAK_PASSWORD: Pa55w0rd
-#      KEYCLOAK_LOGLEVEL: DEBUG
-      # Uncomment the line below if you want to specify JDBC parameters. The parameter below is just an example, and it shouldn't be used in production without knowledge. It is highly recommended that you read the PostgreSQL JDBC driver documentation in order to use it.
-      #JDBC_PARAMS: "ssl=true"
-    ports:
-      - ${KEYCLOAK_HTTP_PORT}:8080
-      - ${KEYCLOAK_HTTPS_PORT}:8443
+    # ports:
+    #   - 8080:8080
+    #   - 8443:8443
     restart: always
     depends_on:
       - postgres
-    # volumes:
-    #   - ./keycloak_conf/standalone.xml:/opt/jboss/keycloak/standalone/configuration/standalone.xml
-  vue-nginx:
+  vue-app:
     build:
       context: ./vue_app/
       dockerfile: vue.Dockerfile
@@ -65,17 +60,11 @@ services:
       test: ['CMD', 'curl', '-f', 'http://localhost:5000/api/hello']
       start_period: 7s
     restart: always
-  # portainer:
-  #   image: cr.portainer.io/portainer/portainer-ce:2.9.3
-  #   restart: always
-  #   ports:
-  #     - 9443:9443
-  #   volumes:
-  #     - /var/run/docker.sock:/var/run/docker.sock
+  
 volumes:
   keycloak_postgres_data:
 secrets:
   ssl_cert:
-    file: ${SSL_CERTIFICATE_FILE}
+    file: certs/site.crt
   ssl_key:
-    file: ${SSL_KEY_FILE}
+    file: certs/site.key
