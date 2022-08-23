@@ -35,8 +35,8 @@ services:
       DB_USER: keycloak
       DB_SCHEMA: public
       DB_PASSWORD: password
-      KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: Pa55w0rd
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: Pa55w0rd
       KC_METRICS_ENABLED: "true"
     healthcheck:
       test: ["CMD", "curl","--fail","http://localhost:9990/health"]
