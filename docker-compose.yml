@@ -26,8 +26,8 @@ services:
       test: ["CMD", "pg_isready", "-U", "keycloak"]
     restart: always
   keycloak:
-    image: quay.io/keycloak/keycloak:latest
-    command: ["-Dkeycloak.frontendUrl=https://localhost/auth"]
+    image: quay.io/keycloak/keycloak:19.0.1
+    command: ["-Dkeycloak.frontendUrl=https://localhost/auth", "start-dev"]
     environment:
       DB_VENDOR: POSTGRES
       DB_ADDR: postgres
@@ -43,8 +43,8 @@ services:
       interval: 30s
       timeout: 30s
       retries: 3
-    # ports:
-    #   - 8080:8080
+    ports:
+      - 8080:8080
     #   - 8443:8443
     restart: always
     depends_on:
