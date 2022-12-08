@@ -10,8 +10,9 @@ Steps To Start Project with Docker-Compose
 4. `./generate_sample_certs.sh` to generate sample CA, keys, and certificates.  This script uses values from the .env to generate certificates based on your frontend hostname.
 5. `cd ..` to get back to the project root
 6. `docker-compose up -d` to start the project
-8. Wait for Keycloak to start up, then go to https://localhost/auth and create client called "vue-app" in "master" realm. Set Valid Redirect Urls to "https://localhost/*" and set Web Origins to "+".
-9. Create a new user in the realm and assign them a password. (Or you can just use the admin user that is automatically created by Keycloak; credentials can be found in docker-compose.yml under the keycloak service)
+7. Wait for Keycloak to start up, then go to https://localhost/auth and create client called "vue-app" in "master" realm. Set Valid Redirect Urls to "*" and set Web Origins to "+".
+8. Create a new user in the realm and assign them a password. (Or you can just use the admin user that is automatically created by Keycloak; credentials can be found in docker-compose.yml under the keycloak service)
+9. Select "Realm settings > Keys > Providers > rsa-enc-generated", and turn off the toggles next to "Active" and "Enabled"
 10. Navigate to https://localhost/api/hello to access your flask app through an unprotetected API endpoint
 11. Navigate to https://localhost/home and login to see the Vue app, protected by Keycloak, which can also connect to the Flask API. Use the button at the top of the app to make a protected API call to the Flask API through the Vue app.
 
