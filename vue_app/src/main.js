@@ -15,6 +15,11 @@ let keycloakInitOptions = {
 }
 
 let keycloak = Keycloak(keycloakInitOptions);
+keycloak.createLogoutUrl = function(options) {
+  return keycloak.endpoints.logout()
+      + '?id_token_hint=' + keycloak.idToken
+      + '&post_logout_redirect_uri=' + encodeURIComponent(window.location.href);
+}
 
 axios.defaults.headers["Content-type"] = "application/json";
 axios.interceptors.request.use(function (config) {
