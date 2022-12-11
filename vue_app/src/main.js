@@ -53,7 +53,7 @@ keycloak.init({ onLoad: keycloakInitOptions.onLoad }).then((auth) => {
     }).catch(() => {
       Vue.$log.error('Failed to refresh token');
     });
-  }, 6000)
+  }, 30000)
 }).catch(() => {
   Vue.$log.error('Authentication Failed');
 })

@@ -60,10 +60,10 @@ services:
       test: ["CMD", "curl","--fail","localhost:80/health"]
       interval: 30s
       retries: 3
-  flaskapp:
+  fastapi-app:
     build: 
-      context: ./flask_app
-      dockerfile: flaskapp.Dockerfile
+      context: ./fastapi_app
+      dockerfile: fastapi.Dockerfile
     # ports: 
     #   - 5000:5000
     healthcheck:
